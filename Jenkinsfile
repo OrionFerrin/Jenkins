@@ -1,74 +1,36 @@
 pipeline {
     agent any
- 
- tools {
+
+     tools {
         nodejs "Node24"
         dockerTool "Dockertool" 
     }
-
- stages {
+    
+    stages {
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
+        stage('Install dependencies') {
+            steps {
+                sh 'npm install' 
+            }
+        }
         
-    stages {
-        stage('Setup') {
+        stage('Ejecutar Tests') {
             steps {
-                script {
-                    echo 'Setting up Node.js environment...'
-                    // Install Node.js if using nvm
-                    nodejs(nodeVersion: env.NODE_VERSION) {
-                        sh 'node --version'
-                    }
-                }
+                sh 'chmod +x ./node_modules/.bin/jest'  // Soluciona el problema de permisos
+                sh 'npm test -- --ci --runInBand'
             }
         }
-
-        stage('Build') {
+        // Se eliminó la llave de cierre extra que estaba aquí.
+ 
+        stage('Build Docker image') {
             steps {
-                script {
-                    echo 'Building the Coffee Shop App...'
-                    sh 'npm install'
-                }
+                sh 'docker build -t school-cafeteria-api .'
             }
         }
-
-        stage('Test') {
-            steps {
-                script {
-                    echo 'Running tests...'
-                    sh 'npm run test'
-                    // Archive test results
-                    junit '**/test-results.xml'
-                }
-            }
-        }
-
-        stage('Deploy') {
-            when {
-                branch 'main'
-            }
-            steps {
-                script {
-                    echo 'Deploying the Coffee Shop App...'
-                    // Add deployment steps here
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'All stages completed successfully!'
-        }
-        failure {
-            echo 'Pipeline failed! Check the logs for details.'
-        }
-        always {
-            echo 'Cleaning up workspace...'
-            cleanWs()
-        }
-    }
+    } // El bloque 'stages' ahora cierra aquí, incluyendo todas las etapas.
+   
 }

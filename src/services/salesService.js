@@ -6,11 +6,14 @@ class SalesService {
         this.sales = [];
     }
 
-    processSale(productId, quantity) {
-        const product = new Product(productId); // Assuming Product constructor takes an ID and fetches details
-        const sale = new Sale(this.sales.length + 1, productId, quantity);
+    processSale(saleData) {
+        const sale = new Sale(this.sales.length + 1, saleData.productId, saleData.quantity);
         this.sales.push(sale);
-        return sale;
+        return {
+            id: sale.id,
+            productId: sale.productId,
+            quantity: sale.quantity
+        };
     }
 
     getSalesReport() {
@@ -18,8 +21,15 @@ class SalesService {
             id: sale.id,
             productId: sale.productId,
             quantity: sale.quantity,
-            totalAmount: sale.calculateTotalAmount() // Assuming Sale has a method to calculate total amount
+            totalAmount: sale.calculateTotalAmount()
         }));
+    }
+
+    calculateTotal(salesData) {
+        return salesData.reduce((total, sale) => {
+            const saleObj = new Sale(sale.id, sale.productId, sale.quantity);
+            return total + saleObj.calculateTotalAmount();
+        }, 0);
     }
 }
 

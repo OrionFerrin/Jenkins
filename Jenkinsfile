@@ -1,10 +1,18 @@
 pipeline {
     agent any
-
-    environment {
-        NODE_VERSION = '16.x'
+ 
+ tools {
+        nodejs "Node24"
+        dockerTool "Dockertool" 
     }
 
+ stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        
     stages {
         stage('Setup') {
             steps {

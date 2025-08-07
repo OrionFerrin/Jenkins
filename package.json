@@ -1,0 +1,19 @@
+{
+  "name": "coffee-shop-app",
+  "version": "1.0.0",
+  "description": "A simple coffee shop application for managing products and sales.",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "jest --reporters=default --reporters=jest-junit"
+  },
+  "devDependencies": {
+    "jest": "^29.x.x",
+    "jest-junit": "^16.x.x"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0"
+  },
+  "author": "Your Name",
+  "license": "MIT"
+}

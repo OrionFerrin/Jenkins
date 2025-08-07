@@ -1,9 +1,14 @@
 pipeline {
     agent any
 
-     tools {
+    tools {
         nodejs "Node24"
         dockerTool "Dockertool" 
+    }
+    
+    triggers {
+        // Polls the SCM every 2 minutes
+        pollSCM('*/2 * * * *')
     }
     
     stages {
@@ -20,17 +25,15 @@ pipeline {
         
         stage('Ejecutar Tests') {
             steps {
-                sh 'chmod +x ./node_modules/.bin/jest'  // Soluciona el problema de permisos
+                sh 'chmod +x ./node_modules/.bin/jest'
                 sh 'npm test -- --ci --runInBand'
             }
         }
-        // Se eliminó la llave de cierre extra que estaba aquí.
  
         stage('Build Docker image') {
             steps {
                 sh 'docker build -t school-cafeteria-api .'
             }
         }
-    } // El bloque 'stages' ahora cierra aquí, incluyendo todas las etapas.
-   
+    }
 }

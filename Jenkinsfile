@@ -35,5 +35,7 @@ pipeline {
                 sh 'docker build -t school-cafeteria-api .'
             }
         }
+
+        st
     }
 }
